@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { logout } from '../store/slices/authSlice';
-import { FaMosque, FaBars, FaTimes, FaMoon, FaSun, FaHome } from 'react-icons/fa';
+import { FaBars, FaTimes, FaMoon, FaSun, FaHome } from 'react-icons/fa';
 import { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 

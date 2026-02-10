@@ -4,9 +4,14 @@ import { User } from '../models/User';
 import { AppError } from '../middleware/errorHandler';
 
 const generateToken = (id: number): string => {
-  return jwt.sign({ id }, process.env.JWT_SECRET!, {
-    expiresIn: process.env.JWT_EXPIRE || '7d'
-  });
+  const secret = process.env.JWT_SECRET || 'your-secret-key';
+  return jwt.sign(
+    { id },
+    secret,
+    {
+      expiresIn: process.env.JWT_EXPIRE || '7d'
+    } as any
+  );
 };
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
