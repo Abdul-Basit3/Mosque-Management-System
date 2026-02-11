@@ -49,7 +49,7 @@ const FAQ = () => {
           id: 4,
           category: 'Navigation & Website Usage',
           question: 'How can I quickly return to the home page?',
-          answer: 'Click the home icon (🏠) in the navigation bar, or click on the mosque logo and "Mosque Portal" text at the top left of any page.'
+          answer: 'Click the home icon (🏠) in the navigation bar, or click on the mosque logo and "Noorul Haq" text at the top left of any page.'
         },
         // Prayer Times
         {

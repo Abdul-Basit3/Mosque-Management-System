@@ -47,17 +47,20 @@ const About = () => {
         {about?.organizationName || 'About Us'}
       </h1>
 
-      {/* System Software Description - Always Show */}
+      {/* System Purpose and Values - Always Show */}
       <section className="card mb-6 bg-gradient-to-br from-islamic-green/5 to-islamic-teal/5 dark:from-islamic-green/10 dark:to-islamic-teal/10 border-2 border-islamic-green/20">
-        <h2 className="text-2xl font-bold mb-4 text-islamic-green dark:text-emerald-400">About This System</h2>
+        <h2 className="text-2xl font-bold mb-4 text-islamic-green dark:text-emerald-400">About Noorul Haq System</h2>
         <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-          The <strong>School Mosque Management System</strong> is a comprehensive digital platform designed to streamline and enhance the management of mosque and school activities. Built with modern web technologies including React, TypeScript, Node.js, Express, and PostgreSQL, this system provides a centralized hub for spiritual resources, educational programs, and community engagement.
+          <strong>Noorul Haq</strong> represents the light of truth and guidance in our digital age. This system embodies the Islamic principle of seeking knowledge and sharing it with the community. As the Prophet Muhammad (peace be upon him) said, "Seek knowledge from the cradle to the grave," our platform facilitates continuous learning and spiritual growth for all members of our ummah.
         </p>
         <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-          Key features include real-time prayer times for Ghana, rotating Islamic quotations, lecture management, online course enrollment, community project tracking, event registration, and administrative dashboards. The platform supports role-based access control for administrators, staff, students, and public users, ensuring secure and efficient operations.
+          The system serves as a beacon of unity, bringing together students, families, and community members under one digital roof. It promotes the Islamic values of brotherhood (ukhuwah), mutual assistance (ta'awun), and collective responsibility. By providing easy access to prayer times, Islamic education, and community activities, we strengthen the bonds that tie our community together in faith and purpose.
+        </p>
+        <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+          <strong>Key Advantages:</strong> Enhanced accessibility to Islamic knowledge, streamlined communication within the community, preservation of Islamic teachings for future generations, efficient organization of religious and educational activities, and fostering a sense of belonging among community members regardless of their physical location.
         </p>
         <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-          With its responsive design, dark mode support, and user-friendly interface, the system serves as a bridge between traditional Islamic values and modern technology, making it easier for the community to stay connected, informed, and engaged in their spiritual journey.
+          <strong>Moral Foundation:</strong> Built upon the principles of transparency (amanah), justice (adl), and service to Allah and humanity. Every feature is designed to uphold Islamic ethics, promote good character (akhlaq), and facilitate the path to spiritual enlightenment. This system is not just a tool, but a means to strengthen our connection with Allah and serve our community with sincerity and dedication.
         </p>
       </section>
 

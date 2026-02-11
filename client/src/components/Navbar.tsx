@@ -52,7 +52,7 @@ const Navbar = () => {
                 e.currentTarget.style.display = 'none';
               }}
             />
-            <span className="text-xl font-bold text-islamic-green dark:text-emerald-400">Mosque Portal</span>
+            <span className="text-xl font-bold text-islamic-green dark:text-emerald-400">Noorul Haq</span>
           </Link>
 
           {/* Desktop Menu */}
