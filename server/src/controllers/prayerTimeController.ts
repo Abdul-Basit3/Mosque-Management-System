@@ -1,12 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { PrayerTime } from '../models/PrayerTime';
 import { AppError } from '../middleware/errorHandler';
-import { Op } from 'sequelize';
 
 export const getTodayPrayerTimes = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const today = new Date().toISOString().split('T')[0];
-    const prayerTime = await PrayerTime.findOne({ where: { date: today } });
+    const prayerTime = await PrayerTime.findOne({ date: today });
 
     if (!prayerTime) {
       throw new AppError('Prayer times not found for today', 404);
@@ -25,14 +24,12 @@ export const getPrayerTimesByDateRange = async (req: Request, res: Response, nex
   try {
     const { startDate, endDate } = req.query;
 
-    const prayerTimes = await PrayerTime.findAll({
-      where: {
-        date: {
-          [Op.between]: [startDate as string, endDate as string]
-        }
-      },
-      order: [['date', 'ASC']]
-    });
+    const prayerTimes = await PrayerTime.find({
+      date: {
+        $gte: startDate as string,
+        $lte: endDate as string
+      }
+    }).sort({ date: 1 });
 
     res.json({
       success: true,
@@ -59,13 +56,14 @@ export const createPrayerTime = async (req: Request, res: Response, next: NextFu
 export const updatePrayerTime = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const prayerTime = await PrayerTime.findByPk(id);
+    const prayerTime = await PrayerTime.findById(id);
 
     if (!prayerTime) {
       throw new AppError('Prayer time not found', 404);
     }
 
-    await prayerTime.update(req.body);
+    Object.assign(prayerTime, req.body);
+    await prayerTime.save();
 
     res.json({
       success: true,

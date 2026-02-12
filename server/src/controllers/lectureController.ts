@@ -1,30 +1,30 @@
 import { Request, Response, NextFunction } from 'express';
 import { Lecture } from '../models/Lecture';
 import { AppError } from '../middleware/errorHandler';
-import { Op } from 'sequelize';
 
 export const getAllLectures = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { search, topic, speaker, page = 1, limit = 10 } = req.query;
-    const offset = (Number(page) - 1) * Number(limit);
-    const where: any = { isPublished: true };
+    const skip = (Number(page) - 1) * Number(limit);
+    const filter: any = { isPublished: true };
 
     if (search) {
-      where[Op.or] = [
-        { title: { [Op.iLike]: `%${search}%` } },
-        { description: { [Op.iLike]: `%${search}%` } }
+      filter.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } }
       ];
     }
 
-    if (topic) where.topic = topic;
-    if (speaker) where.speaker = { [Op.iLike]: `%${speaker}%` };
+    if (topic) filter.topic = topic;
+    if (speaker) filter.speaker = { $regex: speaker, $options: 'i' };
 
-    const { count, rows } = await Lecture.findAndCountAll({
-      where,
-      limit: Number(limit),
-      offset,
-      order: [['publishedAt', 'DESC']]
-    });
+    const [rows, count] = await Promise.all([
+      Lecture.find(filter)
+        .limit(Number(limit))
+        .skip(skip)
+        .sort({ publishedAt: -1 }),
+      Lecture.countDocuments(filter)
+    ]);
 
     res.json({
       success: true,
@@ -43,13 +43,14 @@ export const getAllLectures = async (req: Request, res: Response, next: NextFunc
 export const getLectureById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const lecture = await Lecture.findByPk(id);
+    const lecture = await Lecture.findById(id);
 
     if (!lecture) {
       throw new AppError('Lecture not found', 404);
     }
 
-    await lecture.increment('views');
+    lecture.views += 1;
+    await lecture.save();
 
     res.json({
       success: true,
@@ -76,13 +77,14 @@ export const createLecture = async (req: Request, res: Response, next: NextFunct
 export const updateLecture = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const lecture = await Lecture.findByPk(id);
+    const lecture = await Lecture.findById(id);
 
     if (!lecture) {
       throw new AppError('Lecture not found', 404);
     }
 
-    await lecture.update(req.body);
+    Object.assign(lecture, req.body);
+    await lecture.save();
 
     res.json({
       success: true,
@@ -96,13 +98,13 @@ export const updateLecture = async (req: Request, res: Response, next: NextFunct
 export const deleteLecture = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const lecture = await Lecture.findByPk(id);
+    const lecture = await Lecture.findById(id);
 
     if (!lecture) {
       throw new AppError('Lecture not found', 404);
     }
 
-    await lecture.destroy();
+    await lecture.deleteOne();
 
     res.json({
       success: true,

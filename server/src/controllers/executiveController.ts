@@ -4,10 +4,8 @@ import { AppError } from '../middleware/errorHandler';
 
 export const getAllExecutives = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const executives = await Executive.findAll({
-      where: { isActive: true },
-      order: [['displayOrder', 'ASC'], ['lastName', 'ASC']]
-    });
+    const executives = await Executive.find({ isActive: true })
+      .sort({ displayOrder: 1, lastName: 1 });
 
     res.json({
       success: true,
@@ -21,7 +19,7 @@ export const getAllExecutives = async (req: Request, res: Response, next: NextFu
 export const getExecutiveById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const executive = await Executive.findByPk(id);
+    const executive = await Executive.findById(id);
 
     if (!executive) {
       throw new AppError('Executive not found', 404);
@@ -52,13 +50,14 @@ export const createExecutive = async (req: Request, res: Response, next: NextFun
 export const updateExecutive = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const executive = await Executive.findByPk(id);
+    const executive = await Executive.findById(id);
 
     if (!executive) {
       throw new AppError('Executive not found', 404);
     }
 
-    await executive.update(req.body);
+    Object.assign(executive, req.body);
+    await executive.save();
 
     res.json({
       success: true,
@@ -72,13 +71,13 @@ export const updateExecutive = async (req: Request, res: Response, next: NextFun
 export const deleteExecutive = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const executive = await Executive.findByPk(id);
+    const executive = await Executive.findById(id);
 
     if (!executive) {
       throw new AppError('Executive not found', 404);
     }
 
-    await executive.destroy();
+    await executive.deleteOne();
 
     res.json({
       success: true,

@@ -1,60 +1,42 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import mongoose, { Document, Schema } from 'mongoose';
 
-interface FAQAttributes {
-  id: number;
+export interface IFAQ extends Document {
   category: string;
   question: string;
   answer: string;
   displayOrder: number;
   isActive: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-interface FAQCreationAttributes extends Optional<FAQAttributes, 'id' | 'displayOrder' | 'isActive'> {}
-
-export class FAQ extends Model<FAQAttributes, FAQCreationAttributes> implements FAQAttributes {
-  public id!: number;
-  public category!: string;
-  public question!: string;
-  public answer!: string;
-  public displayOrder!: number;
-  public isActive!: boolean;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
-
-FAQ.init(
+const faqSchema = new Schema<IFAQ>(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
     category: {
-      type: DataTypes.STRING(100),
-      allowNull: false
+      type: String,
+      required: true,
+      maxlength: 100
     },
     question: {
-      type: DataTypes.TEXT,
-      allowNull: false
+      type: String,
+      required: true
     },
     answer: {
-      type: DataTypes.TEXT,
-      allowNull: false
+      type: String,
+      required: true
     },
     displayOrder: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0
+      type: Number,
+      default: 0
     },
     isActive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
+      type: Boolean,
+      default: true
     }
   },
   {
-    sequelize,
-    tableName: 'faqs'
+    timestamps: true
   }
 );
+
+export const FAQ = mongoose.model<IFAQ>('FAQ', faqSchema);

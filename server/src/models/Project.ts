@@ -1,8 +1,6 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import mongoose, { Document, Schema } from 'mongoose';
 
-interface ProjectAttributes {
-  id: number;
+export interface IProject extends Document {
   title: string;
   description: string;
   category: 'building' | 'charity' | 'education' | 'community' | 'other';
@@ -13,74 +11,55 @@ interface ProjectAttributes {
   endDate?: Date;
   images?: string[];
   isActive: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-interface ProjectCreationAttributes extends Optional<ProjectAttributes, 'id' | 'fundingRaised' | 'isActive'> {}
-
-export class Project extends Model<ProjectAttributes, ProjectCreationAttributes> implements ProjectAttributes {
-  public id!: number;
-  public title!: string;
-  public description!: string;
-  public category!: 'building' | 'charity' | 'education' | 'community' | 'other';
-  public status!: 'planning' | 'ongoing' | 'completed' | 'paused';
-  public fundingGoal?: number;
-  public fundingRaised!: number;
-  public startDate?: Date;
-  public endDate?: Date;
-  public images?: string[];
-  public isActive!: boolean;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
-
-Project.init(
+const projectSchema = new Schema<IProject>(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
     title: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+      type: String,
+      required: true,
+      maxlength: 255
     },
     description: {
-      type: DataTypes.TEXT,
-      allowNull: false
+      type: String,
+      required: true
     },
     category: {
-      type: DataTypes.ENUM('building', 'charity', 'education', 'community', 'other'),
-      allowNull: false
+      type: String,
+      enum: ['building', 'charity', 'education', 'community', 'other'],
+      required: true
     },
     status: {
-      type: DataTypes.ENUM('planning', 'ongoing', 'completed', 'paused'),
-      allowNull: false
+      type: String,
+      enum: ['planning', 'ongoing', 'completed', 'paused'],
+      required: true
     },
     fundingGoal: {
-      type: DataTypes.DECIMAL(10, 2)
+      type: Number
     },
     fundingRaised: {
-      type: DataTypes.DECIMAL(10, 2),
-      defaultValue: 0
+      type: Number,
+      default: 0
     },
     startDate: {
-      type: DataTypes.DATE
+      type: Date
     },
     endDate: {
-      type: DataTypes.DATE
+      type: Date
     },
-    images: {
-      type: DataTypes.ARRAY(DataTypes.STRING)
-    },
+    images: [{
+      type: String
+    }],
     isActive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
+      type: Boolean,
+      default: true
     }
   },
   {
-    sequelize,
-    tableName: 'projects'
+    timestamps: true
   }
 );
+
+export const Project = mongoose.model<IProject>('Project', projectSchema);

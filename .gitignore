@@ -9,6 +9,8 @@ node_modules/
 # Production
 /build
 /dist
+client/dist/
+server/dist/
 
 # Environment variables
 .env
@@ -16,6 +18,8 @@ node_modules/
 .env.development.local
 .env.test.local
 .env.production.local
+client/.env
+server/.env
 
 # Logs
 npm-debug.log*
@@ -38,3 +42,19 @@ Thumbs.db
 # Uploads
 uploads/
 temp/
+
+# Deployment
+.vercel
+.render
+.railway
+
+# Package locks (optional - remove if you want to commit them)
+package-lock.json
+client/package-lock.json
+server/package-lock.json
+
+# Cache
+.cache/
+.parcel-cache/
+.next/
+.nuxt/

@@ -1,8 +1,13 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "mosque-management-system",
   "version": "1.0.0",
-  "description": "School Mosque Management System - MERN Stack with PostgreSQL",
+  "description": "School Mosque Management System - MERN Stack with MongoDB",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "workspaces": [
     "client",
     "server"
@@ -17,5 +22,8 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
-  }
+  },
+  "keywords": ["mosque", "management", "system", "mern", "mongodb"],
+  "author": "",
+  "license": "MIT"
 }

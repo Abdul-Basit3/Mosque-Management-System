@@ -2,29 +2,29 @@ import { Request, Response, NextFunction } from 'express';
 import { Course } from '../models/Course';
 import { Enrollment } from '../models/Enrollment';
 import { AppError } from '../middleware/errorHandler';
-import { Op } from 'sequelize';
 
 export const getAllCourses = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { search, level, page = 1, limit = 10 } = req.query;
-    const offset = (Number(page) - 1) * Number(limit);
-    const where: any = { isActive: true };
+    const skip = (Number(page) - 1) * Number(limit);
+    const filter: any = { isActive: true };
 
     if (search) {
-      where[Op.or] = [
-        { title: { [Op.iLike]: `%${search}%` } },
-        { description: { [Op.iLike]: `%${search}%` } }
+      filter.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } }
       ];
     }
 
-    if (level) where.level = level;
+    if (level) filter.level = level;
 
-    const { count, rows } = await Course.findAndCountAll({
-      where,
-      limit: Number(limit),
-      offset,
-      order: [['createdAt', 'DESC']]
-    });
+    const [rows, count] = await Promise.all([
+      Course.find(filter)
+        .limit(Number(limit))
+        .skip(skip)
+        .sort({ createdAt: -1 }),
+      Course.countDocuments(filter)
+    ]);
 
     res.json({
       success: true,
@@ -43,7 +43,7 @@ export const getAllCourses = async (req: Request, res: Response, next: NextFunct
 export const getCourseById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const course = await Course.findByPk(id);
+    const course = await Course.findById(id);
 
     if (!course) {
       throw new AppError('Course not found', 404);
@@ -74,13 +74,14 @@ export const createCourse = async (req: Request, res: Response, next: NextFuncti
 export const updateCourse = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const course = await Course.findByPk(id);
+    const course = await Course.findById(id);
 
     if (!course) {
       throw new AppError('Course not found', 404);
     }
 
-    await course.update(req.body);
+    Object.assign(course, req.body);
+    await course.save();
 
     res.json({
       success: true,
@@ -96,7 +97,7 @@ export const enrollInCourse = async (req: any, res: Response, next: NextFunction
     const { courseId } = req.params;
     const userId = req.user.id;
 
-    const course = await Course.findByPk(courseId);
+    const course = await Course.findById(courseId);
     if (!course) {
       throw new AppError('Course not found', 404);
     }
@@ -106,7 +107,7 @@ export const enrollInCourse = async (req: any, res: Response, next: NextFunction
     }
 
     const existingEnrollment = await Enrollment.findOne({
-      where: { userId, courseId }
+      userId, courseId
     });
 
     if (existingEnrollment) {
@@ -119,7 +120,8 @@ export const enrollInCourse = async (req: any, res: Response, next: NextFunction
       enrolledAt: new Date()
     });
 
-    await course.increment('enrollmentCount');
+    course.enrollmentCount += 1;
+    await course.save();
 
     res.status(201).json({
       success: true,

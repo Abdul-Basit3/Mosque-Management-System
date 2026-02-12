@@ -29,8 +29,12 @@ const AdminLogin = () => {
         return;
       }
 
+      // Store credentials in Redux and localStorage
       dispatch(setCredentials(data.data));
-      navigate('/dashboard');
+      
+      // Use the redirectUrl from backend response for role-based navigation
+      const redirectUrl = data.data.redirectUrl || '/dashboard';
+      navigate(redirectUrl);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {

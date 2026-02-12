@@ -1,68 +1,43 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
-import { User } from './User';
-import { Activity } from './Activity';
+import mongoose, { Document, Schema } from 'mongoose';
 
-interface RegistrationAttributes {
-  id: number;
-  userId: number;
-  activityId: number;
+export interface IRegistration extends Document {
+  userId: mongoose.Types.ObjectId;
+  activityId: mongoose.Types.ObjectId;
   status: 'pending' | 'approved' | 'rejected' | 'attended' | 'cancelled';
   notes?: string;
   registeredAt: Date;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-interface RegistrationCreationAttributes extends Optional<RegistrationAttributes, 'id' | 'status'> {}
-
-export class Registration extends Model<RegistrationAttributes, RegistrationCreationAttributes> implements RegistrationAttributes {
-  public id!: number;
-  public userId!: number;
-  public activityId!: number;
-  public status!: 'pending' | 'approved' | 'rejected' | 'attended' | 'cancelled';
-  public notes?: string;
-  public registeredAt!: Date;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
-
-Registration.init(
+const registrationSchema = new Schema<IRegistration>(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
     userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: { model: 'users', key: 'id' }
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
     },
     activityId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: { model: 'activities', key: 'id' }
+      type: Schema.Types.ObjectId,
+      ref: 'Activity',
+      required: true
     },
     status: {
-      type: DataTypes.ENUM('pending', 'approved', 'rejected', 'attended', 'cancelled'),
-      defaultValue: 'pending'
+      type: String,
+      enum: ['pending', 'approved', 'rejected', 'attended', 'cancelled'],
+      default: 'pending'
     },
     notes: {
-      type: DataTypes.TEXT
+      type: String
     },
     registeredAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW
+      type: Date,
+      default: Date.now
     }
   },
   {
-    sequelize,
-    tableName: 'registrations'
+    timestamps: true
   }
 );
 
-User.hasMany(Registration, { foreignKey: 'userId' });
-Registration.belongsTo(User, { foreignKey: 'userId' });
-Activity.hasMany(Registration, { foreignKey: 'activityId' });
-Registration.belongsTo(Activity, { foreignKey: 'activityId' });
+export const Registration = mongoose.model<IRegistration>('Registration', registrationSchema);

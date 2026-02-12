@@ -1,8 +1,6 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import mongoose, { Document, Schema } from 'mongoose';
 
-interface LectureAttributes {
-  id: number;
+export interface ILecture extends Document {
   title: string;
   description: string;
   speaker: string;
@@ -14,80 +12,63 @@ interface LectureAttributes {
   views: number;
   isPublished: boolean;
   publishedAt?: Date;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-interface LectureCreationAttributes extends Optional<LectureAttributes, 'id' | 'views' | 'isPublished'> {}
-
-export class Lecture extends Model<LectureAttributes, LectureCreationAttributes> implements LectureAttributes {
-  public id!: number;
-  public title!: string;
-  public description!: string;
-  public speaker!: string;
-  public topic!: string;
-  public videoType!: 'upload' | 'youtube' | 'vimeo';
-  public videoUrl!: string;
-  public thumbnail?: string;
-  public duration?: number;
-  public views!: number;
-  public isPublished!: boolean;
-  public publishedAt?: Date;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
-
-Lecture.init(
+const lectureSchema = new Schema<ILecture>(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
     title: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+      type: String,
+      required: true,
+      maxlength: 255
     },
     description: {
-      type: DataTypes.TEXT,
-      allowNull: false
+      type: String,
+      required: true
     },
     speaker: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+      type: String,
+      required: true,
+      maxlength: 255
     },
     topic: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+      type: String,
+      required: true,
+      maxlength: 255
     },
     videoType: {
-      type: DataTypes.ENUM('upload', 'youtube', 'vimeo'),
-      allowNull: false
+      type: String,
+      enum: ['upload', 'youtube', 'vimeo'],
+      required: true
     },
     videoUrl: {
-      type: DataTypes.STRING(500),
-      allowNull: false
+      type: String,
+      required: true,
+      maxlength: 500
     },
     thumbnail: {
-      type: DataTypes.STRING(500)
+      type: String,
+      maxlength: 500
     },
     duration: {
-      type: DataTypes.INTEGER
+      type: Number
     },
     views: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0
+      type: Number,
+      default: 0
     },
     isPublished: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
+      type: Boolean,
+      default: false
     },
     publishedAt: {
-      type: DataTypes.DATE
+      type: Date
     }
   },
   {
-    sequelize,
-    tableName: 'lectures'
+    timestamps: true
   }
 );
+
+export const Lecture = mongoose.model<ILecture>('Lecture', lectureSchema);

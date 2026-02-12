@@ -1,8 +1,6 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import mongoose, { Document, Schema } from 'mongoose';
 
-interface ActivityAttributes {
-  id: number;
+export interface IActivity extends Document {
   title: string;
   description: string;
   type: 'seminar' | 'competition' | 'youth_program' | 'community' | 'other';
@@ -14,80 +12,61 @@ interface ActivityAttributes {
   requiresApproval: boolean;
   isActive: boolean;
   image?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-interface ActivityCreationAttributes extends Optional<ActivityAttributes, 'id' | 'registeredCount' | 'requiresApproval' | 'isActive'> {}
-
-export class Activity extends Model<ActivityAttributes, ActivityCreationAttributes> implements ActivityAttributes {
-  public id!: number;
-  public title!: string;
-  public description!: string;
-  public type!: 'seminar' | 'competition' | 'youth_program' | 'community' | 'other';
-  public location!: string;
-  public startDate!: Date;
-  public endDate?: Date;
-  public maxParticipants?: number;
-  public registeredCount!: number;
-  public requiresApproval!: boolean;
-  public isActive!: boolean;
-  public image?: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
-
-Activity.init(
+const activitySchema = new Schema<IActivity>(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
     title: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+      type: String,
+      required: true,
+      maxlength: 255
     },
     description: {
-      type: DataTypes.TEXT,
-      allowNull: false
+      type: String,
+      required: true
     },
     type: {
-      type: DataTypes.ENUM('seminar', 'competition', 'youth_program', 'community', 'other'),
-      allowNull: false
+      type: String,
+      enum: ['seminar', 'competition', 'youth_program', 'community', 'other'],
+      required: true
     },
     location: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+      type: String,
+      required: true,
+      maxlength: 255
     },
     startDate: {
-      type: DataTypes.DATE,
-      allowNull: false
+      type: Date,
+      required: true
     },
     endDate: {
-      type: DataTypes.DATE
+      type: Date
     },
     maxParticipants: {
-      type: DataTypes.INTEGER
+      type: Number
     },
     registeredCount: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0
+      type: Number,
+      default: 0
     },
     requiresApproval: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
+      type: Boolean,
+      default: false
     },
     isActive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
+      type: Boolean,
+      default: true
     },
     image: {
-      type: DataTypes.STRING(500)
+      type: String,
+      maxlength: 500
     }
   },
   {
-    sequelize,
-    tableName: 'activities'
+    timestamps: true
   }
 );
+
+export const Activity = mongoose.model<IActivity>('Activity', activitySchema);

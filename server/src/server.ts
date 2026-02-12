@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import compression from 'compression';
 import dotenv from 'dotenv';
-import { sequelize } from './config/database';
+import { connectDB } from './config/database';
 import routes from './routes';
 import { errorHandler } from './middleware/errorHandler';
 
@@ -36,13 +36,8 @@ app.use(errorHandler);
 // Database connection and server start
 const startServer = async () => {
   try {
-    await sequelize.authenticate();
-    console.log('✅ Database connected successfully');
-    
-    if (process.env.NODE_ENV === 'development') {
-      await sequelize.sync({ alter: true });
-      console.log('✅ Database synchronized');
-    }
+    await connectDB();
+    console.log('✅ MongoDB connected successfully');
     
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);

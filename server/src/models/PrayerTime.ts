@@ -1,8 +1,6 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import mongoose, { Document, Schema } from 'mongoose';
 
-interface PrayerTimeAttributes {
-  id: number;
+export interface IPrayerTime extends Document {
   date: Date;
   fajr: string;
   sunrise: string;
@@ -13,77 +11,56 @@ interface PrayerTimeAttributes {
   location: string;
   latitude?: number;
   longitude?: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-interface PrayerTimeCreationAttributes extends Optional<PrayerTimeAttributes, 'id'> {}
-
-export class PrayerTime extends Model<PrayerTimeAttributes, PrayerTimeCreationAttributes> implements PrayerTimeAttributes {
-  public id!: number;
-  public date!: Date;
-  public fajr!: string;
-  public sunrise!: string;
-  public dhuhr!: string;
-  public asr!: string;
-  public maghrib!: string;
-  public isha!: string;
-  public location!: string;
-  public latitude?: number;
-  public longitude?: number;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
-
-PrayerTime.init(
+const prayerTimeSchema = new Schema<IPrayerTime>(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
     date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
+      type: Date,
+      required: true,
       unique: true
     },
     fajr: {
-      type: DataTypes.TIME,
-      allowNull: false
+      type: String,
+      required: true
     },
     sunrise: {
-      type: DataTypes.TIME,
-      allowNull: false
+      type: String,
+      required: true
     },
     dhuhr: {
-      type: DataTypes.TIME,
-      allowNull: false
+      type: String,
+      required: true
     },
     asr: {
-      type: DataTypes.TIME,
-      allowNull: false
+      type: String,
+      required: true
     },
     maghrib: {
-      type: DataTypes.TIME,
-      allowNull: false
+      type: String,
+      required: true
     },
     isha: {
-      type: DataTypes.TIME,
-      allowNull: false
+      type: String,
+      required: true
     },
     location: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+      type: String,
+      required: true,
+      maxlength: 255
     },
     latitude: {
-      type: DataTypes.DECIMAL(10, 8)
+      type: Number
     },
     longitude: {
-      type: DataTypes.DECIMAL(11, 8)
+      type: Number
     }
   },
   {
-    sequelize,
-    tableName: 'prayer_times'
+    timestamps: true
   }
 );
+
+export const PrayerTime = mongoose.model<IPrayerTime>('PrayerTime', prayerTimeSchema);

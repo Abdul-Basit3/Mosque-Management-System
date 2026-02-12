@@ -1,8 +1,6 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import mongoose, { Document, Schema } from 'mongoose';
 
-interface AboutAttributes {
-  id: number;
+export interface IAbout extends Document {
   organizationName: string;
   history?: string;
   mission?: string;
@@ -16,81 +14,64 @@ interface AboutAttributes {
   instagramUrl?: string;
   youtubeUrl?: string;
   tiktokUrl?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-interface AboutCreationAttributes extends Optional<AboutAttributes, 'id'> {}
-
-export class About extends Model<AboutAttributes, AboutCreationAttributes> implements AboutAttributes {
-  public id!: number;
-  public organizationName!: string;
-  public history?: string;
-  public mission?: string;
-  public vision?: string;
-  public values?: string;
-  public address?: string;
-  public phone?: string;
-  public email?: string;
-  public facebookUrl?: string;
-  public twitterUrl?: string;
-  public instagramUrl?: string;
-  public youtubeUrl?: string;
-  public tiktokUrl?: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
-
-About.init(
+const aboutSchema = new Schema<IAbout>(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
     organizationName: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+      type: String,
+      required: true,
+      maxlength: 255
     },
     history: {
-      type: DataTypes.TEXT
+      type: String
     },
     mission: {
-      type: DataTypes.TEXT
+      type: String
     },
     vision: {
-      type: DataTypes.TEXT
+      type: String
     },
     values: {
-      type: DataTypes.TEXT
+      type: String
     },
     address: {
-      type: DataTypes.TEXT
+      type: String
     },
     phone: {
-      type: DataTypes.STRING(20)
+      type: String,
+      maxlength: 20
     },
     email: {
-      type: DataTypes.STRING(255)
+      type: String,
+      maxlength: 255
     },
     facebookUrl: {
-      type: DataTypes.STRING(500)
+      type: String,
+      maxlength: 500
     },
     twitterUrl: {
-      type: DataTypes.STRING(500)
+      type: String,
+      maxlength: 500
     },
     instagramUrl: {
-      type: DataTypes.STRING(500)
+      type: String,
+      maxlength: 500
     },
     youtubeUrl: {
-      type: DataTypes.STRING(500)
+      type: String,
+      maxlength: 500
     },
     tiktokUrl: {
-      type: DataTypes.STRING(500)
+      type: String,
+      maxlength: 500
     }
   },
   {
-    sequelize,
-    tableName: 'about'
+    timestamps: true
   }
 );
+
+export const About = mongoose.model<IAbout>('About', aboutSchema);

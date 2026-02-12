@@ -2,22 +2,19 @@ import { Request, Response, NextFunction } from 'express';
 import { Activity } from '../models/Activity';
 import { Registration } from '../models/Registration';
 import { AppError } from '../middleware/errorHandler';
-import { Op } from 'sequelize';
 
 export const getAllActivities = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { type, upcoming } = req.query;
-    const where: any = { isActive: true };
+    const filter: any = { isActive: true };
 
-    if (type) where.type = type;
+    if (type) filter.type = type;
     if (upcoming === 'true') {
-      where.startDate = { [Op.gte]: new Date() };
+      filter.startDate = { $gte: new Date() };
     }
 
-    const activities = await Activity.findAll({
-      where,
-      order: [['startDate', 'ASC']]
-    });
+    const activities = await Activity.find(filter)
+      .sort({ startDate: 1 });
 
     res.json({
       success: true,
@@ -31,7 +28,7 @@ export const getAllActivities = async (req: Request, res: Response, next: NextFu
 export const getActivityById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const activity = await Activity.findByPk(id);
+    const activity = await Activity.findById(id);
 
     if (!activity) {
       throw new AppError('Activity not found', 404);
@@ -65,7 +62,7 @@ export const registerForActivity = async (req: any, res: Response, next: NextFun
     const userId = req.user.id;
     const { notes } = req.body;
 
-    const activity = await Activity.findByPk(activityId);
+    const activity = await Activity.findById(activityId);
     if (!activity) {
       throw new AppError('Activity not found', 404);
     }
@@ -75,7 +72,7 @@ export const registerForActivity = async (req: any, res: Response, next: NextFun
     }
 
     const existingRegistration = await Registration.findOne({
-      where: { userId, activityId }
+      userId, activityId
     });
 
     if (existingRegistration) {
@@ -90,7 +87,8 @@ export const registerForActivity = async (req: any, res: Response, next: NextFun
       status: activity.requiresApproval ? 'pending' : 'approved'
     });
 
-    await activity.increment('registeredCount');
+    activity.registeredCount += 1;
+    await activity.save();
 
     res.status(201).json({
       success: true,
@@ -106,12 +104,13 @@ export const updateRegistrationStatus = async (req: Request, res: Response, next
     const { id } = req.params;
     const { status } = req.body;
 
-    const registration = await Registration.findByPk(id);
+    const registration = await Registration.findById(id);
     if (!registration) {
       throw new AppError('Registration not found', 404);
     }
 
-    await registration.update({ status });
+    registration.status = status;
+    await registration.save();
 
     res.json({
       success: true,

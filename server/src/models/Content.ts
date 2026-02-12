@@ -1,8 +1,6 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import mongoose, { Document, Schema } from 'mongoose';
 
-interface ContentAttributes {
-  id: number;
+export interface IContent extends Document {
   type: 'dua' | 'verse' | 'hadith';
   title: string;
   arabicText: string;
@@ -11,66 +9,49 @@ interface ContentAttributes {
   reference?: string;
   isActive: boolean;
   displayOrder?: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-interface ContentCreationAttributes extends Optional<ContentAttributes, 'id' | 'isActive'> {}
-
-export class Content extends Model<ContentAttributes, ContentCreationAttributes> implements ContentAttributes {
-  public id!: number;
-  public type!: 'dua' | 'verse' | 'hadith';
-  public title!: string;
-  public arabicText!: string;
-  public transliteration?: string;
-  public translation!: string;
-  public reference?: string;
-  public isActive!: boolean;
-  public displayOrder?: number;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
-
-Content.init(
+const contentSchema = new Schema<IContent>(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
     type: {
-      type: DataTypes.ENUM('dua', 'verse', 'hadith'),
-      allowNull: false
+      type: String,
+      enum: ['dua', 'verse', 'hadith'],
+      required: true
     },
     title: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+      type: String,
+      required: true,
+      maxlength: 255
     },
     arabicText: {
-      type: DataTypes.TEXT,
-      allowNull: false
+      type: String,
+      required: true
     },
     transliteration: {
-      type: DataTypes.TEXT
+      type: String
     },
     translation: {
-      type: DataTypes.TEXT,
-      allowNull: false
+      type: String,
+      required: true
     },
     reference: {
-      type: DataTypes.STRING(255)
+      type: String,
+      maxlength: 255
     },
     isActive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
+      type: Boolean,
+      default: true
     },
     displayOrder: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0
+      type: Number,
+      default: 0
     }
   },
   {
-    sequelize,
-    tableName: 'contents'
+    timestamps: true
   }
 );
+
+export const Content = mongoose.model<IContent>('Content', contentSchema);

@@ -1,8 +1,6 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import mongoose, { Document, Schema } from 'mongoose';
 
-interface ExecutiveAttributes {
-  id: number;
+export interface IExecutive extends Document {
   firstName: string;
   lastName: string;
   role: string;
@@ -13,73 +11,58 @@ interface ExecutiveAttributes {
   phone?: string;
   displayOrder: number;
   isActive: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-interface ExecutiveCreationAttributes extends Optional<ExecutiveAttributes, 'id' | 'displayOrder' | 'isActive'> {}
-
-export class Executive extends Model<ExecutiveAttributes, ExecutiveCreationAttributes> implements ExecutiveAttributes {
-  public id!: number;
-  public firstName!: string;
-  public lastName!: string;
-  public role!: string;
-  public department?: string;
-  public bio?: string;
-  public photo?: string;
-  public email?: string;
-  public phone?: string;
-  public displayOrder!: number;
-  public isActive!: boolean;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
-
-Executive.init(
+const executiveSchema = new Schema<IExecutive>(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
     firstName: {
-      type: DataTypes.STRING(100),
-      allowNull: false
+      type: String,
+      required: true,
+      maxlength: 100
     },
     lastName: {
-      type: DataTypes.STRING(100),
-      allowNull: false
+      type: String,
+      required: true,
+      maxlength: 100
     },
     role: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+      type: String,
+      required: true,
+      maxlength: 255
     },
     department: {
-      type: DataTypes.STRING(255)
+      type: String,
+      maxlength: 255
     },
     bio: {
-      type: DataTypes.TEXT
+      type: String
     },
     photo: {
-      type: DataTypes.STRING(500)
+      type: String,
+      maxlength: 500
     },
     email: {
-      type: DataTypes.STRING(255)
+      type: String,
+      maxlength: 255
     },
     phone: {
-      type: DataTypes.STRING(20)
+      type: String,
+      maxlength: 20
     },
     displayOrder: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0
+      type: Number,
+      default: 0
     },
     isActive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
+      type: Boolean,
+      default: true
     }
   },
   {
-    sequelize,
-    tableName: 'executives'
+    timestamps: true
   }
 );
+
+export const Executive = mongoose.model<IExecutive>('Executive', executiveSchema);

@@ -5,14 +5,12 @@ import { AppError } from '../middleware/errorHandler';
 export const getAllFAQs = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { category } = req.query;
-    const where: any = { isActive: true };
+    const filter: any = { isActive: true };
 
-    if (category) where.category = category;
+    if (category) filter.category = category;
 
-    const faqs = await FAQ.findAll({
-      where,
-      order: [['category', 'ASC'], ['displayOrder', 'ASC']]
-    });
+    const faqs = await FAQ.find(filter)
+      .sort({ category: 1, displayOrder: 1 });
 
     res.json({
       success: true,
@@ -39,13 +37,14 @@ export const createFAQ = async (req: Request, res: Response, next: NextFunction)
 export const updateFAQ = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const faq = await FAQ.findByPk(id);
+    const faq = await FAQ.findById(id);
 
     if (!faq) {
       throw new AppError('FAQ not found', 404);
     }
 
-    await faq.update(req.body);
+    Object.assign(faq, req.body);
+    await faq.save();
 
     res.json({
       success: true,
@@ -59,13 +58,13 @@ export const updateFAQ = async (req: Request, res: Response, next: NextFunction)
 export const deleteFAQ = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const faq = await FAQ.findByPk(id);
+    const faq = await FAQ.findById(id);
 
     if (!faq) {
       throw new AppError('FAQ not found', 404);
     }
 
-    await faq.destroy();
+    await faq.deleteOne();
 
     res.json({
       success: true,

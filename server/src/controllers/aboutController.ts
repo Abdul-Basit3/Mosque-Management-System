@@ -26,7 +26,8 @@ export const updateAboutInfo = async (req: Request, res: Response, next: NextFun
     if (!about) {
       about = await About.create(req.body);
     } else {
-      await about.update(req.body);
+      Object.assign(about, req.body);
+      await about.save();
     }
 
     res.json({
