@@ -1,0 +1,142 @@
+import { useEffect, useState } from 'react';
+import api from '../api/axios';
+import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaTiktok } from 'react-icons/fa';
+
+interface AboutInfo {
+  organizationName: string;
+  history?: string;
+  mission?: string;
+  vision?: string;
+  values?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  facebookUrl?: string;
+  twitterUrl?: string;
+  instagramUrl?: string;
+  youtubeUrl?: string;
+  tiktokUrl?: string;
+}
+
+const About = () => {
+  const [about, setAbout] = useState<AboutInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAbout();
+  }, []);
+
+  const fetchAbout = async () => {
+    try {
+      const { data } = await api.get('/about');
+      setAbout(data.data);
+    } catch (error) {
+      console.error('Error fetching about info:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <div className="text-center py-12 text-gray-700 dark:text-gray-300">Loading...</div>;
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 className="text-4xl font-bold mb-8 text-gray-900 dark:text-white">
+        {about?.organizationName || 'About Us'}
+      </h1>
+
+      {/* System Purpose and Values - Always Show */}
+      <section className="card mb-6 bg-gradient-to-br from-islamic-green/5 to-islamic-teal/5 dark:from-islamic-green/10 dark:to-islamic-teal/10 border-2 border-islamic-green/20">
+        <h2 className="text-2xl font-bold mb-4 text-islamic-green dark:text-emerald-400">About Noorul Haq System</h2>
+        <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+          <strong>Noorul Haq</strong> represents the light of truth and guidance in our digital age. This system embodies the Islamic principle of seeking knowledge and sharing it with the community. As the Prophet Muhammad (peace be upon him) said, "Seek knowledge from the cradle to the grave," our platform facilitates continuous learning and spiritual growth for all members of our ummah.
+        </p>
+        <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+          The system serves as a beacon of unity, bringing together students, families, and community members under one digital roof. It promotes the Islamic values of brotherhood (ukhuwah), mutual assistance (ta'awun), and collective responsibility. By providing easy access to prayer times, Islamic education, and community activities, we strengthen the bonds that tie our community together in faith and purpose.
+        </p>
+        <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+          <strong>Key Advantages:</strong> Enhanced accessibility to Islamic knowledge, streamlined communication within the community, preservation of Islamic teachings for future generations, efficient organization of religious and educational activities, and fostering a sense of belonging among community members regardless of their physical location.
+        </p>
+        <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+          <strong>Moral Foundation:</strong> Built upon the principles of transparency (amanah), justice (adl), and service to Allah and humanity. Every feature is designed to uphold Islamic ethics, promote good character (akhlaq), and facilitate the path to spiritual enlightenment. This system is not just a tool, but a means to strengthen our connection with Allah and serve our community with sincerity and dedication.
+        </p>
+      </section>
+
+      {about?.history && (
+        <section className="card mb-6">
+          <h2 className="text-2xl font-bold mb-4 text-islamic-green dark:text-emerald-400">Our History</h2>
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{about.history}</p>
+        </section>
+      )}
+
+      {about?.mission && (
+        <section className="card mb-6">
+          <h2 className="text-2xl font-bold mb-4 text-islamic-green dark:text-emerald-400">Mission</h2>
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{about.mission}</p>
+        </section>
+      )}
+
+      {about?.vision && (
+        <section className="card mb-6">
+          <h2 className="text-2xl font-bold mb-4 text-islamic-green dark:text-emerald-400">Vision</h2>
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{about.vision}</p>
+        </section>
+      )}
+
+      {about?.values && (
+        <section className="card mb-6">
+          <h2 className="text-2xl font-bold mb-4 text-islamic-green dark:text-emerald-400">Our Values</h2>
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{about.values}</p>
+        </section>
+      )}
+
+      {(about?.address || about?.phone || about?.email) && (
+        <section className="card mb-6">
+          <h2 className="text-2xl font-bold mb-4 text-islamic-green dark:text-emerald-400">Contact Us</h2>
+          <div className="space-y-2 text-gray-700 dark:text-gray-300">
+            {about.address && <p><strong>Address:</strong> {about.address}</p>}
+            {about.phone && <p><strong>Phone:</strong> {about.phone}</p>}
+            {about.email && <p><strong>Email:</strong> {about.email}</p>}
+          </div>
+        </section>
+      )}
+
+      {(about?.facebookUrl || about?.twitterUrl || about?.instagramUrl || about?.youtubeUrl || about?.tiktokUrl) && (
+        <section className="card">
+          <h2 className="text-2xl font-bold mb-4 text-islamic-green dark:text-emerald-400">Follow Us</h2>
+          <div className="flex space-x-6">
+            {about.facebookUrl && (
+              <a href={about.facebookUrl} target="_blank" rel="noopener noreferrer" className="text-3xl text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-500">
+                <FaFacebook />
+              </a>
+            )}
+            {about.twitterUrl && (
+              <a href={about.twitterUrl} target="_blank" rel="noopener noreferrer" className="text-3xl text-blue-400 hover:text-blue-500 dark:text-blue-300 dark:hover:text-blue-400">
+                <FaTwitter />
+              </a>
+            )}
+            {about.instagramUrl && (
+              <a href={about.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-3xl text-pink-600 hover:text-pink-700 dark:text-pink-400 dark:hover:text-pink-500">
+                <FaInstagram />
+              </a>
+            )}
+            {about.youtubeUrl && (
+              <a href={about.youtubeUrl} target="_blank" rel="noopener noreferrer" className="text-3xl text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-500">
+                <FaYoutube />
+              </a>
+            )}
+            {about.tiktokUrl && (
+              <a href={about.tiktokUrl} target="_blank" rel="noopener noreferrer" className="text-3xl text-black hover:text-gray-800 dark:text-white dark:hover:text-gray-300">
+                <FaTiktok />
+              </a>
+            )}
+          </div>
+        </section>
+      )}
+    </div>
+  );
+};
+
+export default About;
