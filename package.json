@@ -9,16 +9,18 @@
     "npm": ">=8.0.0"
   },
   "workspaces": [
-    "client",
-    "server"
+    "Frontend/client",
+    "Backend/server"
   ],
   "scripts": {
-    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
+    "install:all": "npm install && cd Frontend/client && npm install && cd ../../Backend/server && npm install",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:client": "cd client && npm run dev",
-    "dev:server": "cd server && npm run dev",
-    "build": "cd client && npm run build && cd ../server && npm run build",
-    "start": "cd server && npm start"
+    "dev:client": "cd Frontend/client && npm run dev",
+    "dev:server": "cd Backend/server && npm run dev",
+    "build": "cd Frontend/client && npm run build",
+    "build:server": "cd Backend/server && npm run build",
+    "start": "cd Backend/server && npm start",
+    "preview": "cd Frontend/client && npm run preview"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
