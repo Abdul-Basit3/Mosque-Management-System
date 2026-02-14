@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin Dashboard - Manage all mosque activities">
+    <title>Admin Dashboard - Noorul Haq</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-dashboard-page">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="sidebar-header">
+            <div class="admin-profile">
+                <div class="admin-avatar">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="admin-info">
+                    <h3>Dashboard</h3>
+                    <p>Admin Panel</p>
+                </div>
+            </div>
+            <div class="admin-user-card">
+                <p class="admin-name" id="adminName">Administrator</p>
+                <span class="admin-role" id="adminRole">ADMIN</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#overview" class="nav-item active" data-section="overview">
+                <i class="fas fa-home"></i>
+                <span>Overview</span>
+            </a>
+            <a href="#all-management" class="nav-item" data-section="all-management">
+                <i class="fas fa-tasks"></i>
+                <span>All Activities</span>
+            </a>
+            <a href="#prayer-times" class="nav-item" data-section="prayer-times">
+                <i class="fas fa-clock"></i>
+                <span>Prayer Times</span>
+            </a>
+            <a href="#lectures" class="nav-item" data-section="lectures">
+                <i class="fas fa-video"></i>
+                <span>Lectures</span>
+            </a>
+            <a href="#courses" class="nav-item" data-section="courses">
+                <i class="fas fa-book"></i>
+                <span>Courses</span>
+            </a>
+            <a href="#projects" class="nav-item" data-section="projects">
+                <i class="fas fa-project-diagram"></i>
+                <span>Projects</span>
+            </a>
+            <a href="#activities" class="nav-item" data-section="activities">
+                <i class="fas fa-calendar"></i>
+                <span>Activities</span>
+            </a>
+            <a href="#executives" class="nav-item" data-section="executives">
+                <i class="fas fa-users"></i>
+                <span>Executives</span>
+            </a>
+            <a href="#faqs" class="nav-item" data-section="faqs">
+                <i class="fas fa-question-circle"></i>
+                <span>FAQs</span>
+            </a>
+            <a href="#settings" class="nav-item" data-section="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <!-- Top Bar -->
+        <div class="admin-topbar">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h1 class="page-title" id="pageTitle">Overview</h1>
+            <div class="topbar-actions">
+                <button id="themeToggle" class="icon-btn" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="icon-btn" aria-label="Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="admin-content" id="adminContent">
+            <!-- Content will be loaded here dynamically -->
+        </div>
+    </main>
+
+    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/admin-dashboard-enhanced.js"></script>
+</body>
+</html>

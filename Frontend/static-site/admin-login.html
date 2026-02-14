@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin Login - Noorul Haq Management System">
+    <title>Admin Login - Noorul Haq</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-login-page">
+    <!-- Background -->
+    <div class="admin-login-bg">
+        <div class="admin-login-overlay"></div>
+        <div class="admin-login-pattern"></div>
+    </div>
+
+    <!-- Login Container -->
+    <div class="admin-login-container">
+        <div class="admin-login-card">
+            <!-- Header -->
+            <div class="admin-login-header">
+                <div class="admin-login-logos">
+                    <img src="images/udslogo.jpg" alt="UDS Logo" class="admin-logo">
+                    <img src="images/gmsalogo.jpg" alt="GMSA Logo" class="admin-logo">
+                </div>
+                <h1>Admin Portal</h1>
+                <p>Mosque Management System</p>
+            </div>
+
+            <!-- Form -->
+            <div class="admin-login-body">
+                <h2>Sign In to Dashboard</h2>
+                
+                <div id="errorMessage" class="error-message" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="errorText"></span>
+                </div>
+
+                <form id="adminLoginForm" class="admin-login-form">
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-user"></i>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                placeholder="admin@example.com" 
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                placeholder="Enter your password" 
+                                required
+                            >
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Remember & Forgot -->
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" class="admin-login-btn" id="loginBtn">
+                        <span class="btn-text">Sign In</span>
+                        <span class="btn-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i> Signing in...
+                        </span>
+                    </button>
+                </form>
+
+                <!-- Back to Home -->
+                <div class="back-to-home">
+                    <a href="index.html">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="admin-login-footer">
+                <p>Protected area. Authorized personnel only.</p>
+            </div>
+        </div>
+
+        <!-- Help Text -->
+        <div class="admin-help-text">
+            <p>Need help? Contact <a href="mailto:support@noorulhaq.org">support@noorulhaq.org</a></p>
+        </div>
+    </div>
+
+    <script type="module" src="js/admin-login.js"></script>
+</body>
+</html>

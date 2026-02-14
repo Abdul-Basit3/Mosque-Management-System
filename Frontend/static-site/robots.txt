@@ -1,0 +1,30 @@
+# Robots.txt - Hide admin pages from search engines
+
+User-agent: *
+# Allow public pages
+Allow: /
+Allow: /index.html
+Allow: /lectures.html
+Allow: /courses.html
+Allow: /projects.html
+Allow: /activities.html
+Allow: /executives.html
+Allow: /faq.html
+Allow: /about.html
+Allow: /css/
+Allow: /js/
+Allow: /images/
+
+# Disallow admin pages
+Disallow: /admin-login.html
+Disallow: /admin-dashboard.html
+Disallow: /admin/
+Disallow: /ts/admin-*.ts
+
+# Disallow sensitive files
+Disallow: /*.json
+Disallow: /*.md
+Disallow: /ts/
+
+# Sitemap (optional - create if needed)
+# Sitemap: https://yourdomain.com/sitemap.xml

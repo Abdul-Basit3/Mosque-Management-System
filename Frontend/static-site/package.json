@@ -1,0 +1,28 @@
+{
+  "name": "noorul-haq-static-site",
+  "version": "1.0.0",
+  "description": "Static website for Noorul Haq (UDS-GMSA) Mosque",
+  "scripts": {
+    "build:ts": "tsc",
+    "watch:ts": "tsc --watch",
+    "serve": "npx http-server . -p 5000 -o",
+    "serve:8080": "npx http-server . -p 8080 -o",
+    "serve:8081": "npx http-server . -p 8081 -o",
+    "dev": "npm run watch:ts & npm run serve",
+    "build": "npm run build:ts",
+    "clean": "rm -rf js/*.js js/*.d.ts js/*.map"
+  },
+  "keywords": [
+    "mosque",
+    "islamic",
+    "static-site",
+    "typescript",
+    "responsive",
+    "pwa"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

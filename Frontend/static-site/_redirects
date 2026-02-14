@@ -1,0 +1,14 @@
+# Netlify/Vercel redirects configuration
+
+# Redirect admin pages to login if not authenticated
+/admin-dashboard.html /admin-login.html 401
+
+# SPA fallback for client-side routing
+/* /index.html 200
+
+# Security headers
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-XSS-Protection: 1; mode=block
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
